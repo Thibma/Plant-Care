@@ -1,0 +1,17 @@
+<resources>
+    <string name="app_name">PlantCare</string>
+    <string name="welcome">Bienvenue !</string>
+    <string name="description_app">Vous souhaitez vous occuper d\'une plante d\'une façon amusante ? Vous êtes au bon endroit ! Inscrivez-vous et commencer à entretenir votre plante avec Plant Care !</string>
+    <string name="sign_in">Se connecter</string>
+    <string name="salut">Salut !</string>
+    <string name="whoAreU">On souhaiterait bien savoir qui tu es !</string>
+    <string name="pseudo">Pseudo</string>
+    <string name="indice_pseudo">Thibma</string>
+    <string name="adresse_mail">Adresse mail</string>
+    <string name="indice_mail">thibma@plantcare.fr</string>
+    <string name="mot_de_passe">Mot de passe</string>
+    <string name="confirm_mot_de_passe">Confirmer mot de passe</string>
+    <string name="sign_up">S\'inscrire</string>
+    <string name="hello">Hello !</string>
+    <string name="description_sign_in">Comment ça va depuis la dernière fois ?</string>
+</resources>

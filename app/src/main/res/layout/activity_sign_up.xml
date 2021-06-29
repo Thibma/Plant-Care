@@ -1,0 +1,116 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+
+    <TextView
+        android:id="@+id/textViewWelcomeInSignup"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="32dp"
+        android:text="@string/salut"
+        android:textAppearance="@style/TextAppearance.AppCompat.Large"
+        android:textColor="@color/textColorInTextEdit"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/textViewSubtitleWelcome"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="4dp"
+        android:text="@string/whoAreU"
+        android:textAppearance="@style/TextAppearance.AppCompat.Small"
+        app:layout_constraintEnd_toStartOf="@+id/guidelineSignUpTextEditEnd"
+        app:layout_constraintStart_toStartOf="@+id/guidelineSignUpTextEditStart"
+        app:layout_constraintTop_toBottomOf="@+id/textViewWelcomeInSignup" />
+
+    <TextView
+        android:id="@+id/textViewPseudoSignUp"
+        style="@style/AppTheme.TextViewSignup"
+        android:text="@string/pseudo"
+        app:layout_constraintBottom_toTopOf="@+id/editTextTextPersonName"
+        app:layout_constraintStart_toStartOf="@+id/editTextTextPersonName" />
+
+    <EditText
+        android:id="@+id/editTextTextPersonName"
+
+        style="@style/AppTheme.TextEdit"
+        android:layout_marginTop="32dp"
+        android:background="@drawable/text_edit"
+        android:hint="@string/indice_pseudo"
+        android:inputType="textPersonName"
+        android:textColor="@color/textColorInTextEdit"
+        app:layout_constraintEnd_toStartOf="@+id/guidelineSignUpTextEditEnd"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="@+id/guidelineSignUpTextEditStart"
+        app:layout_constraintTop_toBottomOf="@+id/textViewSubtitleWelcome" />
+
+    <TextView
+        android:id="@+id/textViewPasswordSignUp"
+        style="@style/AppTheme.TextViewSignup"
+        android:text="@string/mot_de_passe"
+        app:layout_constraintBottom_toTopOf="@+id/editTextTextPassword"
+        app:layout_constraintStart_toStartOf="@+id/editTextTextPassword" />
+
+    <EditText
+        android:id="@+id/editTextTextPassword"
+        style="@style/AppTheme.TextEdit"
+        android:layout_marginTop="32dp"
+        android:background="@drawable/text_edit"
+        android:hint="@string/mot_de_passe"
+        android:inputType="textPassword"
+        android:textColor="@color/textColorInTextEdit"
+        app:layout_constraintEnd_toStartOf="@+id/guidelineSignUpTextEditEnd"
+        app:layout_constraintStart_toStartOf="@+id/guidelineSignUpTextEditStart"
+        app:layout_constraintTop_toBottomOf="@+id/editTextTextPersonName" />
+
+    <TextView
+        android:id="@+id/textViewPasswordConfirmSignUp"
+        style="@style/AppTheme.TextViewSignup"
+        android:text="@string/confirm_mot_de_passe"
+        app:layout_constraintBottom_toTopOf="@+id/editTextTextConfirmPassword"
+        app:layout_constraintStart_toStartOf="@+id/editTextTextConfirmPassword" />
+
+    <EditText
+        android:id="@+id/editTextTextConfirmPassword"
+        style="@style/AppTheme.TextEdit"
+        android:layout_marginTop="32dp"
+        android:background="@drawable/text_edit"
+        android:hint="@string/confirm_mot_de_passe"
+        android:inputType="textPassword"
+        android:textColor="@color/textColorInTextEdit"
+        app:layout_constraintEnd_toStartOf="@+id/guidelineSignUpTextEditEnd"
+        app:layout_constraintStart_toStartOf="@+id/guidelineSignUpTextEditStart"
+        app:layout_constraintTop_toBottomOf="@+id/editTextTextPassword" />
+
+    <Button
+        android:id="@+id/buttonSignUp"
+        android:background="@drawable/button_color_principal"
+        style="@style/AppTheme.ButtonSignUp"
+        android:layout_width="300dp"
+        android:layout_height="50dp"
+        android:layout_marginBottom="32dp"
+        android:text="@string/sign_up"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toStartOf="@+id/guidelineSignUpTextEditEnd"
+        app:layout_constraintStart_toStartOf="@+id/guidelineSignUpTextEditStart" />
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/guidelineSignUpTextEditStart"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        app:layout_constraintGuide_percent="0.1" />
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/guidelineSignUpTextEditEnd"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        app:layout_constraintGuide_percent="0.9" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>
