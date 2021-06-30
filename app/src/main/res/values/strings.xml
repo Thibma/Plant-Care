@@ -14,4 +14,14 @@
     <string name="sign_up">S\'inscrire</string>
     <string name="hello">Hello !</string>
     <string name="description_sign_in">Comment ça va depuis la dernière fois ?</string>
+    <string name="your_robots">Vos robots</string>
+    <string name="empty_list">La liste est vide ! Ajoutez un robot !</string>
+    <string name="add_button">Add button</string>
+    <string name="add_robot">Ajouter un robot</string>
+    <string name="robot_name">Nom du robot</string>
+    <string name="nono">Nono le petit robot</string>
+    <string name="add_the_robot">Ajouter le robot</string>
+    <string name="bluetooth_image">Bluetooth image</string>
+    <string name="nom_du_dispositif">Nom du dispositif</string>
+    <string name="adresse_mac_du_dispositif">Adresse mac du dispositif</string>
 </resources>
