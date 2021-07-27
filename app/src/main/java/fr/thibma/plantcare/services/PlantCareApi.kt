@@ -25,5 +25,5 @@ interface PlantCareApi {
     // Créer une plante
     @Headers("Content-Type: application/json")
     @POST("/plants")
-    fun createPlant(@Body plantRequest: PlantRequest, @Header("api-token") token: String = apiToken): Call<ApiResponse>
+    fun createPlant(@Body plantRequest: PlantRequest, @Header("jwt-token") jwtToken: String, @Header("api-token") token: String = apiToken): Call<ApiResponse>
 }

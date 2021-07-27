@@ -37,14 +37,12 @@ class MainActivity : AppCompatActivity() {
 
         floatingActionButton = findViewById(R.id.floatingAddRobot)
         floatingActionButton.setOnClickListener {
-            /*val bundle = Bundle()
+            val bundle = Bundle()
             bundle.putString("token", token)
             bundle.putSerializable("user", user)
             val intent = Intent(this, AddRobotActivity::class.java)
             intent.putExtras(bundle)
-            startActivity(intent)*/
-
-            DialogPlant(this)
+            startActivity(intent)
         }
     }
 

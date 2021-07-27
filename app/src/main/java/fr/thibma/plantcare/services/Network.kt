@@ -44,7 +44,7 @@ object Network {
     }
 
     // Créer une plante
-    fun createPlant(plantRequest: PlantRequest, listener: NetworkListener<String>) {
-        plantCareApi.createPlant(plantRequest).enqueue(Handler(listener))
+    fun createPlant(plantRequest: PlantRequest, token: String, listener: NetworkListener<String>) {
+        plantCareApi.createPlant(plantRequest, token).enqueue(Handler(listener))
     }
 }

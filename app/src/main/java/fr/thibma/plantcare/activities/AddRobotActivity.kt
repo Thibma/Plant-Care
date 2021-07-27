@@ -20,15 +20,18 @@ import androidx.appcompat.app.AlertDialog
 import androidx.lifecycle.MutableLiveData
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.google.gson.Gson
 import fr.thibma.plantcare.R
 import fr.thibma.plantcare.adapter.DiscoverBluetoothAdapter
 import fr.thibma.plantcare.dialogs.DialogPlant
 import fr.thibma.plantcare.dialogs.DialogPlantListener
 import fr.thibma.plantcare.dialogs.DialogWifi
 import fr.thibma.plantcare.dialogs.DialogWifiListener
+import fr.thibma.plantcare.models.Plant
 import fr.thibma.plantcare.models.User
 import fr.thibma.plantcare.models.requests.PlantRequest
 import fr.thibma.plantcare.services.*
+import fr.thibma.plantcare.utils.DialogLoading
 import fr.thibma.plantcare.utils.DialogOK
 import fr.thibma.plantcare.utils.DialogOkListener
 import java.io.IOError
@@ -62,7 +65,11 @@ class AddRobotActivity : AppCompatActivity(), DiscoverBluetoothAdapter.OnDiscove
     private var ssid: String? = null
     private var password: String? = null
 
+    private var plant: Plant? = null
+
     val uuid: UUID = UUID.fromString("00001101-0000-1000-8000-00805f9b34fb")
+
+    private val loadingDialog = DialogLoading(this)
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -166,6 +173,7 @@ class AddRobotActivity : AppCompatActivity(), DiscoverBluetoothAdapter.OnDiscove
             return
         }
 
+        loadingDialog.startDialog()
         val connectThread = ConnectThread(selectedDevice!!)
         connectThread.run()
     }
@@ -211,6 +219,7 @@ class AddRobotActivity : AppCompatActivity(), DiscoverBluetoothAdapter.OnDiscove
         bluetoothResponse.observe(this, { response ->
             when (response) {
                 "ssid ?" -> {
+                    loadingDialog.stopDialog()
                     DialogWifi(this)
                 }
                 "ssid received" -> {
@@ -220,9 +229,19 @@ class AddRobotActivity : AppCompatActivity(), DiscoverBluetoothAdapter.OnDiscove
                     bluetoothService.write(password!!.toByteArray())
                 }
                 "pwd received" -> {
+                    loadingDialog.stopDialog()
                     DialogPlant(this)
                 }
+                "id ?" -> {
+                    bluetoothService.write(plant!!.id.toByteArray())
+                }
+                "id received" -> {
+                    bluetoothService.write("t".toByteArray())
+                }
                 "token ?" -> {
+                    bluetoothService.write(token!!.toByteArray())
+                }
+                "token received" -> {
 
                 }
             }
@@ -231,15 +250,18 @@ class AddRobotActivity : AppCompatActivity(), DiscoverBluetoothAdapter.OnDiscove
     }
 
     override fun onWifiSend(ssid: String, password: String) {
+        loadingDialog.startDialog()
         this.ssid = ssid
         this.password = password
         bluetoothService.write(ssid.toByteArray())
     }
 
     override fun onPlantSent(plantRequest: PlantRequest) {
-        Network.createPlant(plantRequest, object : NetworkListener<String> {
+        loadingDialog.startDialog()
+        Network.createPlant(plantRequest, token!!, object : NetworkListener<String> {
             override fun onSuccess(data: String) {
-                 //
+                plant = Gson().fromJson(data, Plant::class.java)
+                bluetoothService.write("i".toByteArray())
             }
 
             override fun onErrorApi(message: String) {
