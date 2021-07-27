@@ -21,25 +21,37 @@
         app:layout_constraintTop_toTopOf="parent" />
 
     <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/recyclerView"
+        android:id="@+id/recyclerViewDiscover"
         android:layout_width="0dp"
-        android:layout_height="200dp"
+        android:layout_height="300dp"
         android:layout_marginTop="8dp"
         app:layout_constraintEnd_toStartOf="@+id/guideline3"
         app:layout_constraintStart_toStartOf="@+id/guideline2"
-        app:layout_constraintTop_toBottomOf="@+id/titleAddRobot" />
+        app:layout_constraintTop_toBottomOf="@+id/titleAddRobot"
+        tools:listitem="@layout/item_add_robot"/>
+
+    <ProgressBar
+        android:id="@+id/progresBarAddRobot"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintBottom_toBottomOf="@+id/recyclerViewDiscover"
+        app:layout_constraintEnd_toStartOf="@+id/guideline3"
+        app:layout_constraintStart_toStartOf="@+id/guideline2"
+        app:layout_constraintTop_toTopOf="@+id/recyclerViewDiscover" />
 
     <TextView
         android:id="@+id/textViewRobotName"
         style="@style/AppTheme.TextViewSignup"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginBottom="8dp"
         android:text="@string/robot_name"
-        app:layout_constraintBottom_toTopOf="@+id/editTextTextUsername2"
+        app:layout_constraintBottom_toTopOf="@+id/editTextRobotName"
         app:layout_constraintStart_toStartOf="@+id/guideline2" />
 
+
     <EditText
-        android:id="@+id/editTextTextUsername2"
+        android:id="@+id/editTextRobotName"
         style="@style/AppTheme.TextEdit"
         android:layout_marginTop="32dp"
         android:background="@drawable/text_edit"
@@ -47,8 +59,30 @@
         android:inputType="textPersonName"
         android:textColor="@color/textColorInTextEdit"
         app:layout_constraintEnd_toStartOf="@+id/guideline3"
+        app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="@+id/guideline2"
-        app:layout_constraintTop_toBottomOf="@+id/recyclerView" />
+        app:layout_constraintTop_toBottomOf="@+id/textViewSelectedDeviceName" />
+
+    <TextView
+        android:id="@+id/textViewSelectedDevice"
+        style="@style/AppTheme.TextViewSignup"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:text="Robot seléctionné"
+        app:layout_constraintStart_toStartOf="@+id/guideline2"
+        app:layout_constraintTop_toBottomOf="@+id/recyclerViewDiscover" />
+
+    <TextView
+        android:id="@+id/textViewSelectedDeviceName"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:text="Aucun"
+        android:textStyle="bold"
+        app:layout_constraintEnd_toStartOf="@+id/guideline3"
+        app:layout_constraintStart_toStartOf="@+id/guideline2"
+        app:layout_constraintTop_toBottomOf="@+id/textViewSelectedDevice" />
 
     <Button
         android:id="@+id/buttonAddRobot"

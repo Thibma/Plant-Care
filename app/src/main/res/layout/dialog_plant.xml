@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <EditText
+        android:id="@+id/editTextPlantName"
+        style="@style/AppTheme.TextEdit"
+        android:layout_marginStart="32dp"
+        android:layout_marginTop="16dp"
+        android:layout_marginEnd="32dp"
+        android:background="@drawable/text_edit"
+        android:hint="Nom de la plante"
+        android:inputType="textEmailAddress"
+        android:textColor="@color/textColorInTextEdit"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/textViewPlantTemp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:text="Température : Normale"
+        app:layout_constraintStart_toStartOf="@+id/editTextPlantName"
+        app:layout_constraintTop_toBottomOf="@+id/editTextPlantName" />
+
+    <SeekBar
+        android:id="@+id/seekBarPlantTemp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="32dp"
+        android:layout_marginEnd="32dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/textViewPlantTemp" />
+
+    <TextView
+        android:id="@+id/textViewPlantHum"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:text="Humidité : Normale"
+        app:layout_constraintStart_toStartOf="@+id/editTextPlantName"
+        app:layout_constraintTop_toBottomOf="@+id/seekBarPlantTemp" />
+
+    <SeekBar
+        android:id="@+id/seekBarPlantHum"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="32dp"
+        android:layout_marginEnd="32dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/textViewPlantHum" />
+
+    <TextView
+        android:id="@+id/textViewPlantLum"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:text="Luminosité : Normale"
+        app:layout_constraintStart_toStartOf="@+id/editTextPlantName"
+        app:layout_constraintTop_toBottomOf="@+id/seekBarPlantHum" />
+
+    <SeekBar
+        android:id="@+id/seekBarPlantLum"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="32dp"
+        android:layout_marginEnd="32dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/textViewPlantLum" />
+
+    <Button
+        android:id="@+id/createPlantButton"
+        style="@style/AppTheme.ButtonSignUp"
+        android:layout_width="200dp"
+        android:layout_height="50dp"
+        android:layout_marginTop="24dp"
+        android:layout_marginBottom="24dp"
+        android:background="@drawable/button_color_principal"
+        android:text="Confirmer"
+        android:textStyle="bold"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/seekBarPlantLum" />
+
+
+
+</androidx.constraintlayout.widget.ConstraintLayout>

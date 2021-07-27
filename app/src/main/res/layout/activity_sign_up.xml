@@ -37,7 +37,6 @@
 
     <EditText
         android:id="@+id/editTextTextPersonName"
-
         style="@style/AppTheme.TextEdit"
         android:layout_marginTop="32dp"
         android:background="@drawable/text_edit"
