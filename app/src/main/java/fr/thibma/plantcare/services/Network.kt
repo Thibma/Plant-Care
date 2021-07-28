@@ -1,6 +1,7 @@
 package fr.thibma.plantcare.services
 
 import fr.thibma.plantcare.models.requests.PlantRequest
+import fr.thibma.plantcare.models.requests.RobotRequest
 import fr.thibma.plantcare.models.requests.UserRequest
 import okhttp3.OkHttpClient
 import retrofit2.Retrofit
@@ -46,5 +47,10 @@ object Network {
     // Créer une plante
     fun createPlant(plantRequest: PlantRequest, token: String, listener: NetworkListener<String>) {
         plantCareApi.createPlant(plantRequest, token).enqueue(Handler(listener))
+    }
+
+    // Créer un robot
+    fun createRobot(robotRequest: RobotRequest, token: String, listener: NetworkListener<String>) {
+        plantCareApi.createRobot(robotRequest, token).enqueue(Handler(listener))
     }
 }

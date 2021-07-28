@@ -30,6 +30,7 @@ import fr.thibma.plantcare.dialogs.DialogWifiListener
 import fr.thibma.plantcare.models.Plant
 import fr.thibma.plantcare.models.User
 import fr.thibma.plantcare.models.requests.PlantRequest
+import fr.thibma.plantcare.models.requests.RobotRequest
 import fr.thibma.plantcare.services.*
 import fr.thibma.plantcare.utils.DialogLoading
 import fr.thibma.plantcare.utils.DialogOK
@@ -242,7 +243,42 @@ class AddRobotActivity : AppCompatActivity(), DiscoverBluetoothAdapter.OnDiscove
                     bluetoothService.write(token!!.toByteArray())
                 }
                 "token received" -> {
+                    bluetoothService.write("l".toByteArray())
+                }
+                "Starting config lum" -> {
+                    when(plant?.light.toString()) {
+                        "very-low" -> bluetoothService.write("w".toByteArray())
+                        "low" -> bluetoothService.write("l".toByteArray())
+                        "medium" -> bluetoothService.write("m".toByteArray())
+                        "high" -> bluetoothService.write("h".toByteArray())
+                        "very-high" -> bluetoothService.write("v".toByteArray())
+                    }
+                }
+                "lux received" -> {
+                    val robotRequest = RobotRequest(selectedDevice!!.address, robotNameEditText.text.toString(), user!!.id)
+                    Network.createRobot(robotRequest, token!!, object : NetworkListener<String> {
+                        override fun onSuccess(data: String) {
+                            
+                        }
 
+                        override fun onErrorApi(message: String) {
+                            onError(Throwable(message))
+                        }
+
+                        override fun onError(t: Throwable) {
+                            DialogOK(
+                                t.toString(),
+                                "Erreur de connexion",
+                                this@AddRobotActivity
+                            ).startDialog(object : DialogOkListener {
+                                override fun onOkClick(alertDialog: AlertDialog) {
+                                    alertDialog.dismiss()
+                                    return
+                                }
+                            })
+                        }
+
+                    })
                 }
             }
         })

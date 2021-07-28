@@ -1,6 +1,7 @@
 package fr.thibma.plantcare.services
 
 import fr.thibma.plantcare.models.requests.PlantRequest
+import fr.thibma.plantcare.models.requests.RobotRequest
 import fr.thibma.plantcare.models.requests.UserRequest
 import fr.thibma.plantcare.models.response.ApiResponse
 import retrofit2.Call
@@ -26,4 +27,10 @@ interface PlantCareApi {
     @Headers("Content-Type: application/json")
     @POST("/plants")
     fun createPlant(@Body plantRequest: PlantRequest, @Header("jwt-token") jwtToken: String, @Header("api-token") token: String = apiToken): Call<ApiResponse>
+
+    // Créer un robot
+    @Headers("Content-Type: application/json")
+    @POST("/robots")
+    fun createRobot(@Body robotRequest: RobotRequest, @Header("jwt-token") jwtToken: String, @Header("api-token") token: String = apiToken): Call<ApiResponse>
+
 }

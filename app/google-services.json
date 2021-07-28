@@ -1,0 +1,47 @@
+{
+  "project_info": {
+    "project_number": "981733026524",
+    "project_id": "kotlin-food-fact",
+    "storage_bucket": "kotlin-food-fact.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:981733026524:android:2b296cff85529d69106219",
+        "android_client_info": {
+          "package_name": "fr.thibma.kotlinfoodfact"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "981733026524-ah08mvj8svlc6j87lli9oi2bl31kllgj.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "fr.thibma.kotlinfoodfact",
+            "certificate_hash": "b925715534bab5baf5d83c802086d74fe78d9eb6"
+          }
+        },
+        {
+          "client_id": "981733026524-p7hn8o777ivaal2cuq41el1cv3piedai.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyD0TjEODKZr2oufTeWvHo6ejsRebYqgoew"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "981733026524-p7hn8o777ivaal2cuq41el1cv3piedai.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
