@@ -13,16 +13,26 @@
         android:layout_marginTop="24dp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:srcCompat="@drawable/button_color_principal" />
+        app:srcCompat="@drawable/robot" />
 
     <TextView
         android:id="@+id/robotNameTextViewRobotItem"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="24dp"
-        android:text="Robot"
+        android:layout_marginStart="20dp"
+        android:layout_marginTop="5dp"
+        android:text="@string/robot"
         android:textSize="20sp"
-        app:layout_constraintBottom_toBottomOf="parent"
+        android:textStyle="bold"
         app:layout_constraintStart_toEndOf="@+id/imageViewRobotItem"
         app:layout_constraintTop_toTopOf="@+id/imageViewRobotItem" />
+
+    <TextView
+        android:id="@+id/plantNameTextViewRobotItem"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="15dp"
+        android:text="@string/plante"
+        app:layout_constraintStart_toStartOf="@+id/robotNameTextViewRobotItem"
+        app:layout_constraintTop_toBottomOf="@+id/robotNameTextViewRobotItem" />
 </androidx.constraintlayout.widget.ConstraintLayout>

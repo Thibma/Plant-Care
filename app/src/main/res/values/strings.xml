@@ -24,4 +24,6 @@
     <string name="bluetooth_image">Bluetooth image</string>
     <string name="nom_du_dispositif">Nom du dispositif</string>
     <string name="adresse_mac_du_dispositif">Adresse mac du dispositif</string>
+    <string name="plante">Plante</string>
+    <string name="robot">Robot</string>
 </resources>

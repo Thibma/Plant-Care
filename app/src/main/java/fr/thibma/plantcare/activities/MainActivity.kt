@@ -15,7 +15,6 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.google.gson.Gson
 import fr.thibma.plantcare.R
 import fr.thibma.plantcare.adapter.RobotListAdapter
-import fr.thibma.plantcare.dialogs.DialogPlant
 import fr.thibma.plantcare.models.Robot
 import fr.thibma.plantcare.models.User
 import fr.thibma.plantcare.services.Network
@@ -62,8 +61,7 @@ class MainActivity : AppCompatActivity() {
         recyclerView = findViewById(R.id.recyclerViewRobotList)
         refreshList()
 
-
-        Network.getAllRobotByUser(user!!.id!!, token!!, object : NetworkListener<String> {
+        Network.getAllRobotByUser(user!!.id, token!!, object : NetworkListener<String> {
             override fun onSuccess(data: String) {
                 val robotList: List<Robot> = Gson().fromJson(data, Array<Robot>::class.java).toList()
                 setRecyclerView(robotList)
@@ -122,7 +120,6 @@ class MainActivity : AppCompatActivity() {
                 })
             }
         })
-
     }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {

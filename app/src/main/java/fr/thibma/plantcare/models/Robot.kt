@@ -8,6 +8,6 @@ class Robot(
     @SerializedName("name") var name: String,
     @SerializedName("mac") var mac: String,
     @SerializedName("user") var user: User,
-    @SerializedName("mainPlant") var mainPlant: Plant,
+    @SerializedName("mainPlant") var mainPlant: Plant?,
     @SerializedName("allPlants") var allPlants: List<String>,
 ): Serializable {}
