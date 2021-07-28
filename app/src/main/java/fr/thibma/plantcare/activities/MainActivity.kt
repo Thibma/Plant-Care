@@ -14,6 +14,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.google.gson.Gson
 import fr.thibma.plantcare.R
+import fr.thibma.plantcare.adapter.DiscoverBluetoothAdapter
 import fr.thibma.plantcare.adapter.RobotListAdapter
 import fr.thibma.plantcare.models.Robot
 import fr.thibma.plantcare.models.User
@@ -22,7 +23,7 @@ import fr.thibma.plantcare.services.NetworkListener
 import fr.thibma.plantcare.utils.DialogOK
 import fr.thibma.plantcare.utils.DialogOkListener
 
-class MainActivity : AppCompatActivity() {
+class MainActivity : AppCompatActivity(), DiscoverBluetoothAdapter.OnDiscoveryBlutoothClickListener {
 
     private lateinit var toolbar: Toolbar
     private lateinit var floatingActionButton: FloatingActionButton
@@ -33,6 +34,8 @@ class MainActivity : AppCompatActivity() {
 
     private lateinit var recyclerView: RecyclerView
     private lateinit var robotListAdapter: RobotListAdapter
+
+    private var robotList: List<Robot> = ArrayList()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -63,7 +66,7 @@ class MainActivity : AppCompatActivity() {
 
         Network.getAllRobotByUser(user!!.id, token!!, object : NetworkListener<String> {
             override fun onSuccess(data: String) {
-                val robotList: List<Robot> = Gson().fromJson(data, Array<Robot>::class.java).toList()
+                robotList = Gson().fromJson(data, Array<Robot>::class.java).toMutableList()
                 setRecyclerView(robotList)
             }
 
@@ -100,7 +103,7 @@ class MainActivity : AppCompatActivity() {
     private fun refreshList() {
         Network.getAllRobotByUser(user!!.id, token!!, object : NetworkListener<String> {
             override fun onSuccess(data: String) {
-                val robotList: List<Robot> = Gson().fromJson(data, Array<Robot>::class.java).toList()
+                robotList = Gson().fromJson(data, Array<Robot>::class.java).toMutableList()
                 setRecyclerView(robotList)
             }
 
@@ -148,6 +151,10 @@ class MainActivity : AppCompatActivity() {
 
     private fun optionButton() {
         finish()
+    }
+
+    override fun onItemClick(position: Int) {
+
     }
 
 }
