@@ -1,26 +1,39 @@
 package fr.thibma.plantcare.activities
 
-import android.bluetooth.BluetoothDevice
-import android.bluetooth.BluetoothSocket
 import android.content.Intent
-import android.media.session.MediaSession
 import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
+import android.view.View
+import android.widget.TextView
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.floatingactionbutton.FloatingActionButton
+import com.google.gson.Gson
 import fr.thibma.plantcare.R
+import fr.thibma.plantcare.adapter.RobotListAdapter
 import fr.thibma.plantcare.dialogs.DialogPlant
+import fr.thibma.plantcare.models.Robot
 import fr.thibma.plantcare.models.User
+import fr.thibma.plantcare.services.Network
+import fr.thibma.plantcare.services.NetworkListener
+import fr.thibma.plantcare.utils.DialogOK
+import fr.thibma.plantcare.utils.DialogOkListener
 
 class MainActivity : AppCompatActivity() {
 
     private lateinit var toolbar: Toolbar
     private lateinit var floatingActionButton: FloatingActionButton
+    private lateinit var statusText: TextView
 
     private var user: User? = null
     private var token: String? = null
+
+    private lateinit var recyclerView: RecyclerView
+    private lateinit var robotListAdapter: RobotListAdapter
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -36,6 +49,7 @@ class MainActivity : AppCompatActivity() {
         setSupportActionBar(toolbar)
 
         floatingActionButton = findViewById(R.id.floatingAddRobot)
+        statusText = findViewById(R.id.emptyList)
         floatingActionButton.setOnClickListener {
             val bundle = Bundle()
             bundle.putString("token", token)
@@ -44,6 +58,71 @@ class MainActivity : AppCompatActivity() {
             intent.putExtras(bundle)
             startActivity(intent)
         }
+
+        recyclerView = findViewById(R.id.recyclerViewRobotList)
+        refreshList()
+
+
+        Network.getAllRobotByUser(user!!.id!!, token!!, object : NetworkListener<String> {
+            override fun onSuccess(data: String) {
+                val robotList: List<Robot> = Gson().fromJson(data, Array<Robot>::class.java).toList()
+                setRecyclerView(robotList)
+            }
+
+            override fun onErrorApi(message: String) {
+                onError(Throwable(message))
+            }
+
+            override fun onError(t: Throwable) {
+                DialogOK(
+                    t.toString(),
+                    "Erreur de connexion",
+                    this@MainActivity
+                ).startDialog(object : DialogOkListener {
+                    override fun onOkClick(alertDialog: androidx.appcompat.app.AlertDialog) {
+                        alertDialog.dismiss()
+                    }
+                })
+            }
+        })
+
+    }
+
+    private fun setRecyclerView(robotList: List<Robot>) {
+        robotListAdapter = RobotListAdapter(robotList)
+        recyclerView.adapter = robotListAdapter
+        recyclerView.layoutManager = LinearLayoutManager(this.applicationContext)
+        recyclerView.setHasFixedSize((true))
+
+        if (robotList.isEmpty()) {
+            statusText.visibility = View.VISIBLE
+        }
+    }
+
+    private fun refreshList() {
+        Network.getAllRobotByUser(user!!.id, token!!, object : NetworkListener<String> {
+            override fun onSuccess(data: String) {
+                val robotList: List<Robot> = Gson().fromJson(data, Array<Robot>::class.java).toList()
+                setRecyclerView(robotList)
+            }
+
+            override fun onErrorApi(message: String) {
+                onError(Throwable(message))
+            }
+
+            override fun onError(t: Throwable) {
+                DialogOK(
+                    t.toString(),
+                    "Erreur de connexion",
+                    this@MainActivity
+                ).startDialog(object : DialogOkListener {
+                    override fun onOkClick(alertDialog: androidx.appcompat.app.AlertDialog) {
+                        alertDialog.dismiss()
+                    }
+                })
+            }
+        })
+
     }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
@@ -63,8 +142,15 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
+    private val onAddRobotActivityResult = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
+        if (result.resultCode == RESULT_OK) {
+            // REFRESH RECYCLER VIEW
+        }
+    }
+
+
     private fun optionButton() {
-        startActivity(Intent(this, SettingsActivity::class.java))
+        finish()
     }
 
 }
