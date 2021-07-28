@@ -9,12 +9,28 @@ import androidx.recyclerview.widget.RecyclerView
 import fr.thibma.plantcare.R
 import fr.thibma.plantcare.models.Robot
 
-class RobotListAdapter(private val robotList: List<Robot>): RecyclerView.Adapter<RobotListAdapter.RobotListViewHolder>() {
+class RobotListAdapter(private val robotList: List<Robot>, private val listener: RobotListAdapter.OnRobotClickListener): RecyclerView.Adapter<RobotListAdapter.RobotListViewHolder>() {
 
-    inner class RobotListViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
+    inner class RobotListViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView), View.OnClickListener {
         val imageView: ImageView = itemView.findViewById(R.id.imageViewRobotItem)
         val robotNameTextView: TextView = itemView.findViewById(R.id.robotNameTextViewRobotItem)
         val plantNameTextView: TextView = itemView.findViewById(R.id.plantNameTextViewRobotItem)
+
+        init {
+            itemView.setOnClickListener(this)
+        }
+
+        override fun onClick(v: View?) {
+            val position = adapterPosition
+            if (position != RecyclerView.NO_POSITION) {
+                listener.onItemClick(position)
+            }
+        }
+
+    }
+
+    interface OnRobotClickListener {
+        fun onItemClick(position: Int)
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RobotListViewHolder {

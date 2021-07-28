@@ -28,6 +28,7 @@ import fr.thibma.plantcare.dialogs.DialogPlantListener
 import fr.thibma.plantcare.dialogs.DialogWifi
 import fr.thibma.plantcare.dialogs.DialogWifiListener
 import fr.thibma.plantcare.models.Plant
+import fr.thibma.plantcare.models.Robot
 import fr.thibma.plantcare.models.User
 import fr.thibma.plantcare.models.requests.PlantRequest
 import fr.thibma.plantcare.models.requests.RobotRequest
@@ -252,8 +253,8 @@ class AddRobotActivity : AppCompatActivity(), DiscoverBluetoothAdapter.OnDiscove
                     val robotRequest = RobotRequest(selectedDevice!!.address, robotNameEditText.text.toString(), user!!.id)
                     Network.createRobot(robotRequest, token!!, object : NetworkListener<String> {
                         override fun onSuccess(data: String) {
-                            setResult(RESULT_OK)
-                            finish()
+                            val robot = Gson().fromJson(data, Robot::class.java)
+                            associatePlant(robot)
                         }
 
                         override fun onErrorApi(message: String) {
@@ -263,7 +264,7 @@ class AddRobotActivity : AppCompatActivity(), DiscoverBluetoothAdapter.OnDiscove
                         override fun onError(t: Throwable) {
                             DialogOK(
                                 t.toString(),
-                                "Erreur de connexion",
+                                "Création d'un robot",
                                 this@AddRobotActivity
                             ).startDialog(object : DialogOkListener {
                                 override fun onOkClick(alertDialog: AlertDialog) {
@@ -278,6 +279,33 @@ class AddRobotActivity : AppCompatActivity(), DiscoverBluetoothAdapter.OnDiscove
             }
         })
         bluetoothService.write("w".toByteArray())
+    }
+
+    private fun associatePlant(robot: Robot) {
+        Network.associatePlant(robot.id, plant!!.id, token!!, object : NetworkListener<String> {
+            override fun onSuccess(data: String) {
+                setResult(RESULT_OK)
+                finish()
+            }
+
+            override fun onErrorApi(message: String) {
+                onError(Throwable(message))
+            }
+
+            override fun onError(t: Throwable) {
+                DialogOK(
+                    t.toString(),
+                    "Association plante robot",
+                    this@AddRobotActivity
+                ).startDialog(object : DialogOkListener {
+                    override fun onOkClick(alertDialog: AlertDialog) {
+                        alertDialog.dismiss()
+                        return
+                    }
+                })
+            }
+
+        })
     }
 
     override fun onWifiSend(ssid: String, password: String) {

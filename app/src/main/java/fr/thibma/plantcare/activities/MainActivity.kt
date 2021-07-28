@@ -20,10 +20,11 @@ import fr.thibma.plantcare.models.Robot
 import fr.thibma.plantcare.models.User
 import fr.thibma.plantcare.services.Network
 import fr.thibma.plantcare.services.NetworkListener
+import fr.thibma.plantcare.utils.DialogLoading
 import fr.thibma.plantcare.utils.DialogOK
 import fr.thibma.plantcare.utils.DialogOkListener
 
-class MainActivity : AppCompatActivity(), DiscoverBluetoothAdapter.OnDiscoveryBlutoothClickListener {
+class MainActivity : AppCompatActivity(), RobotListAdapter.OnRobotClickListener {
 
     private lateinit var toolbar: Toolbar
     private lateinit var floatingActionButton: FloatingActionButton
@@ -36,6 +37,8 @@ class MainActivity : AppCompatActivity(), DiscoverBluetoothAdapter.OnDiscoveryBl
     private lateinit var robotListAdapter: RobotListAdapter
 
     private var robotList: List<Robot> = ArrayList()
+
+    private val dialogLoading = DialogLoading(this)
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -58,7 +61,7 @@ class MainActivity : AppCompatActivity(), DiscoverBluetoothAdapter.OnDiscoveryBl
             bundle.putSerializable("user", user)
             val intent = Intent(this, AddRobotActivity::class.java)
             intent.putExtras(bundle)
-            startActivity(intent)
+            onAddRobotActivityResult.launch(intent)
         }
 
         recyclerView = findViewById(R.id.recyclerViewRobotList)
@@ -90,13 +93,16 @@ class MainActivity : AppCompatActivity(), DiscoverBluetoothAdapter.OnDiscoveryBl
     }
 
     private fun setRecyclerView(robotList: List<Robot>) {
-        robotListAdapter = RobotListAdapter(robotList)
+        robotListAdapter = RobotListAdapter(robotList, this)
         recyclerView.adapter = robotListAdapter
         recyclerView.layoutManager = LinearLayoutManager(this.applicationContext)
         recyclerView.setHasFixedSize((true))
 
         if (robotList.isEmpty()) {
             statusText.visibility = View.VISIBLE
+        }
+        else {
+            statusText.visibility = View.INVISIBLE
         }
     }
 
@@ -144,8 +150,12 @@ class MainActivity : AppCompatActivity(), DiscoverBluetoothAdapter.OnDiscoveryBl
 
     private val onAddRobotActivityResult = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
         if (result.resultCode == RESULT_OK) {
-            // REFRESH RECYCLER VIEW
+            refreshList()
         }
+    }
+
+    private val onControlRobotActivityResult = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) {
+        dialogLoading.stopDialog()
     }
 
 
@@ -154,7 +164,12 @@ class MainActivity : AppCompatActivity(), DiscoverBluetoothAdapter.OnDiscoveryBl
     }
 
     override fun onItemClick(position: Int) {
-
+        val bundle = Bundle()
+        bundle.putSerializable("robot", robotList[position])
+        val intent = Intent(this, ControlRobotActivity::class.java)
+        intent.putExtras(bundle)
+        dialogLoading.startDialog()
+        onControlRobotActivityResult.launch(intent)
     }
 
 }

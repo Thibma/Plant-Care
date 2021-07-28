@@ -17,8 +17,10 @@ import android.os.Looper
 import android.util.Log
 import android.view.View
 import android.widget.Button
+import android.widget.ImageButton
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AlertDialog
+import androidx.lifecycle.MutableLiveData
 import androidx.recyclerview.widget.LinearLayoutManager
 import fr.thibma.plantcare.R
 import fr.thibma.plantcare.adapter.DiscoverBluetoothAdapter
@@ -30,44 +32,46 @@ import fr.thibma.plantcare.utils.DialogLoading
 import fr.thibma.plantcare.utils.DialogOK
 import fr.thibma.plantcare.utils.DialogOkListener
 import java.io.IOException
+import java.lang.Exception
 import java.util.*
 
 class ControlRobotActivity : AppCompatActivity() {
 
-    private lateinit var buttonForward: Button
-    private lateinit var buttonRight: Button
-    private lateinit var buttonBack: Button
-    private lateinit var buttonLeft: Button
+    private lateinit var buttonForward: ImageButton
+    private lateinit var buttonRight: ImageButton
+    private lateinit var buttonBack: ImageButton
+    private lateinit var buttonLeft: ImageButton
     private lateinit var buttonReturn: Button
 
     private lateinit var bluetoothAdapter: BluetoothAdapter
-    private lateinit var bluetoothService: BluetoothService.ConnectedThread
+    private var bluetoothService: BluetoothService.ConnectedThread? = null
 
     private lateinit var connectThread: ConnectThread
 
+    private var found = false
+
     private val timer = Timer("Bluetooth", false)
-    private val dialogLoading = DialogLoading(this)
 
     val uuid: UUID = UUID.fromString("00001101-0000-1000-8000-00805f9b34fb")
 
     private var robot: Robot? = null
 
+    private var bluetoothResponse: MutableLiveData<String> = MutableLiveData<String>()
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_control_robot)
 
-        dialogLoading.startDialog()
+        val extras = intent.extras
+        if (extras != null) {
+            robot = extras.getSerializable("robot") as Robot
+        }
 
         buttonForward = findViewById(R.id.buttonForward)
         buttonRight = findViewById(R.id.buttonRight)
         buttonBack = findViewById(R.id.buttonBack)
         buttonLeft = findViewById(R.id.buttonLeft)
         buttonReturn = findViewById(R.id.buttonRetour)
-
-        val extras = intent.extras
-        if (extras != null) {
-            robot = extras.getSerializable("robot") as Robot
-        }
 
         bluetoothAdapter = BluetoothAdapter.getDefaultAdapter()
         if (!bluetoothAdapter.isEnabled) {
@@ -79,22 +83,20 @@ class ControlRobotActivity : AppCompatActivity() {
         }
 
         buttonReturn.setOnClickListener {
-            bluetoothService.write("@".toByteArray())
-            unregisterReceiver(receiver)
-            bluetoothService.cancel()
+            bluetoothService!!.write("@".toByteArray())
         }
 
         buttonForward.setOnClickListener {
-            bluetoothService.write("f".toByteArray())
+            bluetoothService!!.write("f".toByteArray())
         }
         buttonRight.setOnClickListener {
-            bluetoothService.write("r".toByteArray())
+            bluetoothService!!.write("r".toByteArray())
         }
         buttonBack.setOnClickListener {
-            bluetoothService.write("b".toByteArray())
+            bluetoothService!!.write("b".toByteArray())
         }
         buttonLeft.setOnClickListener {
-            bluetoothService.write("l".toByteArray())
+            bluetoothService!!.write("l".toByteArray())
         }
 
     }
@@ -109,7 +111,6 @@ class ControlRobotActivity : AppCompatActivity() {
         timer.schedule(object : TimerTask() {
 
             override fun run() {
-                dialogLoading.stopDialog()
                 DialogOK(
                     "Le robot n'a pas été trouvé...",
                     "Erreur de connexion bluetooth",
@@ -117,24 +118,25 @@ class ControlRobotActivity : AppCompatActivity() {
                 ).startDialog(object : DialogOkListener {
                     override fun onOkClick(alertDialog: AlertDialog) {
                         alertDialog.dismiss()
-                        finish()
+                        leave()
                     }
-
                 })
             }
 
         }, 10000)
-        val alreadyPaired: List<BluetoothDevice> = bluetoothAdapter.bondedDevices.toList()
 
+        val alreadyPaired: List<BluetoothDevice> = bluetoothAdapter.bondedDevices.toList()
         alreadyPaired.forEach { device ->
             if (device.address == robot!!.mac) {
+                found = true
                 robotFound(device)
             }
         }
-
-        bluetoothAdapter.startDiscovery()
-        val filter = IntentFilter(BluetoothDevice.ACTION_FOUND)
-        registerReceiver(receiver, filter)
+        if (!found) {
+            bluetoothAdapter.startDiscovery()
+            val filter = IntentFilter(BluetoothDevice.ACTION_FOUND)
+            registerReceiver(receiver, filter)
+        }
     }
 
     private val receiver = object : BroadcastReceiver() {
@@ -162,8 +164,22 @@ class ControlRobotActivity : AppCompatActivity() {
             super.run()
             bluetoothAdapter.cancelDiscovery()
             mmSocket?.let { socket ->
-                socket.connect()
-                bluetoothConnected(socket)
+                try {
+                    socket.connect()
+                    bluetoothConnected(socket)
+                }
+                catch (e: Exception) {
+                    DialogOK(
+                        "Le robot n'a pas été trouvé...",
+                        "Erreur de connexion bluetooth",
+                        this@ControlRobotActivity
+                    ).startDialog(object : DialogOkListener {
+                        override fun onOkClick(alertDialog: AlertDialog) {
+                            alertDialog.dismiss()
+                            leave()
+                        }
+                    })
+                }
             }
         }
 
@@ -181,21 +197,58 @@ class ControlRobotActivity : AppCompatActivity() {
         connectThread.run()
     }
 
-    private val handler = Handler(Looper.getMainLooper()) {
+    private val handler = Handler(Looper.getMainLooper()) { message ->
+        when(message.what) {
+            MESSAGE_READ -> {
+                val readBuff = message.obj as ByteArray
+                val tempMsg = String(readBuff, 0, message.arg1)
+                bluetoothResponse.value = tempMsg
+            }
+        }
         true
     }
 
     private fun bluetoothConnected(bluetoothSocket: BluetoothSocket) {
         bluetoothService = BluetoothService(handler).ConnectedThread(bluetoothSocket)
-        bluetoothService.start()
-        bluetoothService.write("m".toByteArray())
+        bluetoothService!!.start()
+        bluetoothService!!.write("m".toByteArray())
+        bluetoothResponse.observe(this) { response ->
+            when(response) {
+                "leave" -> {
+                    leave()
+                }
+            }
+        }
         timer.cancel()
-        dialogLoading.stopDialog()
     }
 
     override fun onDestroy() {
         super.onDestroy()
-        unregisterReceiver(receiver)
-        bluetoothService.cancel()
+        if (!found) {
+            unregisterReceiver(receiver)
+        }
+        if (bluetoothService != null) {
+            bluetoothService!!.cancel()
+        }
+        timer.cancel()
+    }
+
+    override fun onBackPressed() {
+        if (bluetoothService != null) {
+            bluetoothService!!.write("@".toByteArray())
+        }
+
+    }
+
+    private fun leave() {
+        if (!found) {
+            unregisterReceiver(receiver)
+        }
+        if (bluetoothService != null) {
+            bluetoothService!!.cancel()
+        }
+        timer.cancel()
+        setResult(RESULT_OK)
+        finish()
     }
 }
