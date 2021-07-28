@@ -28,7 +28,7 @@ interface PlantCareApi {
     @POST("/plants")
     fun createPlant(@Body plantRequest: PlantRequest, @Header("jwt-token") jwtToken: String, @Header("api-token") token: String = apiToken): Call<ApiResponse>
 
-    // Créer un robot
+    // Récupérer tous les robots par utilisateur
     @Headers("Content-Type: application/json")
     @POST("/robots")
     fun createRobot(@Body robotRequest: RobotRequest, @Header("jwt-token") jwtToken: String, @Header("api-token") token: String = apiToken): Call<ApiResponse>
