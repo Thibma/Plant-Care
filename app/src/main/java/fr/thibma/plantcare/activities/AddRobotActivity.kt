@@ -94,7 +94,6 @@ class AddRobotActivity : AppCompatActivity(), DiscoverBluetoothAdapter.OnDiscove
             resultBluetooth.launch(intent)
         }
         else {
-            Toast.makeText(this, "Bluetooth déja activé", Toast.LENGTH_SHORT).show()
             discoverBluetooth()
         }
 
@@ -152,11 +151,6 @@ class AddRobotActivity : AppCompatActivity(), DiscoverBluetoothAdapter.OnDiscove
     override fun onItemClick(position: Int) {
         selectedDevice = pairedDevice[position]
         selectedDeviceTextView.text = selectedDevice?.name
-    }
-
-    override fun onDestroy() {
-        super.onDestroy()
-        unregisterReceiver(receiver)
     }
 
     private fun addRobot() {
@@ -319,5 +313,11 @@ class AddRobotActivity : AppCompatActivity(), DiscoverBluetoothAdapter.OnDiscove
             }
 
         })
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        unregisterReceiver(receiver)
+        bluetoothService.cancel()
     }
 }
