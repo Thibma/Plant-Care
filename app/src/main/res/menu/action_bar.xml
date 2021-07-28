@@ -4,7 +4,7 @@
 
     <item
         android:id="@+id/optionButton"
-        android:icon="@drawable/ic_baseline_settings_24"
+        android:icon="@drawable/ic_baseline_exit_to_app_24"
         app:showAsAction="ifRoom"
         android:title="Options"/>
 

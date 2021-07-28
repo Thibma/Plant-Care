@@ -7,12 +7,16 @@ import android.media.session.MediaSession
 import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
+import androidx.activity.result.contract.ActivityResultContracts
+import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import fr.thibma.plantcare.R
 import fr.thibma.plantcare.dialogs.DialogPlant
 import fr.thibma.plantcare.models.User
+import fr.thibma.plantcare.utils.DialogOK
+import fr.thibma.plantcare.utils.DialogOkListener
 
 class MainActivity : AppCompatActivity() {
 
@@ -63,8 +67,18 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
+    private val onAddRobotActivityResult = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
+        if (result.resultCode == RESULT_OK) {
+            // REFRESH RECYCLER VIEW
+        }
+    }
+
     private fun optionButton() {
-        startActivity(Intent(this, SettingsActivity::class.java))
+        finish()
+    }
+
+    override fun onBackPressed() {
+        super.onBackPressed()
     }
 
 }
