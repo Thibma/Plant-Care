@@ -258,7 +258,7 @@ class AddRobotActivity : AppCompatActivity(), DiscoverBluetoothAdapter.OnDiscove
                     val robotRequest = RobotRequest(selectedDevice!!.address, robotNameEditText.text.toString(), user!!.id)
                     Network.createRobot(robotRequest, token!!, object : NetworkListener<String> {
                         override fun onSuccess(data: String) {
-                            
+
                         }
 
                         override fun onErrorApi(message: String) {

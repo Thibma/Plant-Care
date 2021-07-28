@@ -53,4 +53,9 @@ object Network {
     fun createRobot(robotRequest: RobotRequest, token: String, listener: NetworkListener<String>) {
         plantCareApi.createRobot(robotRequest, token).enqueue(Handler(listener))
     }
+
+    // Récupérer tous les robots de l'utilisateur
+    fun getAllRobotByUser(userId: String, token: String, listener: NetworkListener<String> ) {
+        plantCareApi.getAllRobotByUser(userId, token).enqueue(Handler(listener))
+    }
 }
