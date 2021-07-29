@@ -6,6 +6,7 @@ import fr.thibma.plantcare.models.requests.UserRequest
 import okhttp3.OkHttpClient
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
+import retrofit2.http.GET
 import retrofit2.http.Headers
 import retrofit2.http.POST
 import java.util.concurrent.TimeUnit
@@ -61,5 +62,10 @@ object Network {
     // Associer une plante a un robot
     fun associatePlant(robotId: String, plantId: String, token: String, listener: NetworkListener<String>) {
         plantCareApi.associatePlant(robotId, plantId, token).enqueue(Handler(listener))
+    }
+
+    // Avoir toute les valeurs de plante
+    fun getPlantData(plantId: String, token: String, listener: NetworkListener<String>) {
+        plantCareApi.getPlantData(plantId, token).enqueue(Handler(listener))
     }
 }

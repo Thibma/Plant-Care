@@ -58,7 +58,7 @@ class AddRobotActivity : AppCompatActivity(), DiscoverBluetoothAdapter.OnDiscove
     private val pairedDevice: ArrayList<BluetoothDevice> = ArrayList()
     private var selectedDevice: BluetoothDevice? = null
 
-    private lateinit var bluetoothService: BluetoothService.ConnectedThread
+    private var bluetoothService: BluetoothService.ConnectedThread? = null
     private var bluetoothResponse: MutableLiveData<String> = MutableLiveData<String>()
 
     private var user: User? = null
@@ -211,7 +211,7 @@ class AddRobotActivity : AppCompatActivity(), DiscoverBluetoothAdapter.OnDiscove
 
     private fun bluetoothConnected(bluetoothSocket: BluetoothSocket) {
         bluetoothService = BluetoothService(handler).ConnectedThread(bluetoothSocket)
-        bluetoothService.start()
+        bluetoothService!!.start()
         bluetoothResponse.observe(this, { response ->
             when (response) {
                 "ssid ?" -> {
@@ -219,34 +219,34 @@ class AddRobotActivity : AppCompatActivity(), DiscoverBluetoothAdapter.OnDiscove
                     DialogWifi(this)
                 }
                 "ssid received" -> {
-                    bluetoothService.write("p".toByteArray())
+                    bluetoothService!!.write("p".toByteArray())
                 }
                 "pwd ?" -> {
-                    bluetoothService.write(password!!.toByteArray())
+                    bluetoothService!!.write(password!!.toByteArray())
                 }
                 "pwd received" -> {
                     loadingDialog.stopDialog()
                     DialogPlant(this)
                 }
                 "id ?" -> {
-                    bluetoothService.write(plant!!.id.toByteArray())
+                    bluetoothService!!.write(plant!!.id.toByteArray())
                 }
                 "id received" -> {
-                    bluetoothService.write("t".toByteArray())
+                    bluetoothService!!.write("t".toByteArray())
                 }
                 "token ?" -> {
-                    bluetoothService.write(token!!.toByteArray())
+                    bluetoothService!!.write(token!!.toByteArray())
                 }
                 "token received" -> {
-                    bluetoothService.write("l".toByteArray())
+                    bluetoothService!!.write("l".toByteArray())
                 }
                 "Starting config lum" -> {
                     when(plant?.light.toString()) {
-                        "very-low" -> bluetoothService.write("w".toByteArray())
-                        "low" -> bluetoothService.write("l".toByteArray())
-                        "medium" -> bluetoothService.write("m".toByteArray())
-                        "high" -> bluetoothService.write("h".toByteArray())
-                        "very-high" -> bluetoothService.write("v".toByteArray())
+                        "very-low" -> bluetoothService!!.write("w".toByteArray())
+                        "low" -> bluetoothService!!.write("l".toByteArray())
+                        "medium" -> bluetoothService!!.write("m".toByteArray())
+                        "high" -> bluetoothService!!.write("h".toByteArray())
+                        "very-high" -> bluetoothService!!.write("v".toByteArray())
                     }
                 }
                 "lux received" -> {
@@ -278,7 +278,7 @@ class AddRobotActivity : AppCompatActivity(), DiscoverBluetoothAdapter.OnDiscove
                 }
             }
         })
-        bluetoothService.write("w".toByteArray())
+        bluetoothService!!.write("w".toByteArray())
     }
 
     private fun associatePlant(robot: Robot) {
@@ -312,7 +312,7 @@ class AddRobotActivity : AppCompatActivity(), DiscoverBluetoothAdapter.OnDiscove
         loadingDialog.startDialog()
         this.ssid = ssid
         this.password = password
-        bluetoothService.write(ssid.toByteArray())
+        bluetoothService!!.write(ssid.toByteArray())
     }
 
     override fun onPlantSent(plantRequest: PlantRequest) {
@@ -320,7 +320,7 @@ class AddRobotActivity : AppCompatActivity(), DiscoverBluetoothAdapter.OnDiscove
         Network.createPlant(plantRequest, token!!, object : NetworkListener<String> {
             override fun onSuccess(data: String) {
                 plant = Gson().fromJson(data, Plant::class.java)
-                bluetoothService.write("i".toByteArray())
+                bluetoothService!!.write("i".toByteArray())
             }
 
             override fun onErrorApi(message: String) {
@@ -346,6 +346,6 @@ class AddRobotActivity : AppCompatActivity(), DiscoverBluetoothAdapter.OnDiscove
     override fun onDestroy() {
         super.onDestroy()
         unregisterReceiver(receiver)
-        bluetoothService.cancel()
+        bluetoothService?.cancel()
     }
 }

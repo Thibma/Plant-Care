@@ -38,8 +38,6 @@ class MainActivity : AppCompatActivity(), RobotListAdapter.OnRobotClickListener 
 
     private var robotList: List<Robot> = ArrayList()
 
-    private val dialogLoading = DialogLoading(this)
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
@@ -154,11 +152,6 @@ class MainActivity : AppCompatActivity(), RobotListAdapter.OnRobotClickListener 
         }
     }
 
-    private val onControlRobotActivityResult = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) {
-        dialogLoading.stopDialog()
-    }
-
-
     private fun optionButton() {
         finish()
     }
@@ -166,10 +159,10 @@ class MainActivity : AppCompatActivity(), RobotListAdapter.OnRobotClickListener 
     override fun onItemClick(position: Int) {
         val bundle = Bundle()
         bundle.putSerializable("robot", robotList[position])
-        val intent = Intent(this, ControlRobotActivity::class.java)
+        bundle.putString("token", token)
+        val intent = Intent(this, RobotDetailsActivity::class.java)
         intent.putExtras(bundle)
-        dialogLoading.startDialog()
-        onControlRobotActivityResult.launch(intent)
+        startActivity(intent)
     }
 
 }

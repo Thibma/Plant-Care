@@ -41,4 +41,8 @@ interface PlantCareApi {
     // Associer une plante a un robot
     @POST("/robots/{id_robot}/plant/{id_plant}")
     fun associatePlant(@Path(value = "id_robot", encoded = true) idRobot: String, @Path(value = "id_plant", encoded = true) idPlant: String, @Header("jwt-token") jwtToken: String, @Header("api-token") token: String = apiToken): Call<ApiResponse>
+
+    // Avoir toute les valeurs de plante
+    @GET("plantdatas/plant/{id_plant}?limit=100&page=1")
+    fun getPlantData(@Path(value = "id_plant", encoded = true) idPlant: String, @Header("jwt-token") jwtToken: String, @Header("api-token") token: String = apiToken): Call<ApiResponse>
 }
